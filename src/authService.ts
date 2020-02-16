@@ -8,7 +8,7 @@ interface Config {
 
 type UserData = any;
 
-interface AuthProvider {
+interface AuthService {
   hashPassword: (password: string) => Promise<string | void>;
   checkPassword: (
     newPassword: string,
@@ -18,9 +18,9 @@ interface AuthProvider {
   decodeToken: (accessToken: string) => UserData;
 }
 
-type CreateAuthProviderFn = (config: Config) => AuthProvider;
+type CreateAuthServiceFn = (config: Config) => AuthService;
 
-export const createAuthProvider: CreateAuthProviderFn = ({
+export const createAuthService: CreateAuthServiceFn = ({
   PASSWORD_SALT_ROUNDS,
   AUTH_TOKEN_SECRET
 }) => {

@@ -1,10 +1,10 @@
-import { createAuthProvider } from ".";
+import { createAuthService } from ".";
 
-describe("authProvider", () => {
-  let authProvider;
+describe("authService", () => {
+  let authService;
 
   beforeAll(() => {
-    authProvider = createAuthProvider({
+    authService = createAuthService({
       PASSWORD_SALT_ROUNDS: 10,
       AUTH_TOKEN_SECRET: "auth token secret"
     });
@@ -13,7 +13,7 @@ describe("authProvider", () => {
   describe("hashPassword", () => {
     it("hashes password properly", async () => {
       const originalPassword = "12345";
-      const result = await authProvider.hashPassword(originalPassword);
+      const result = await authService.hashPassword(originalPassword);
 
       expect(result).toBeDefined();
       expect(result).not.toBe(originalPassword);
@@ -23,11 +23,11 @@ describe("authProvider", () => {
   describe("checkPassword", () => {
     it("checks passwords properly", async () => {
       const originalPassword = "12345";
-      const hashedOriginalPassword = await authProvider.hashPassword(
+      const hashedOriginalPassword = await authService.hashPassword(
         originalPassword
       );
 
-      let result = await authProvider.checkPassword(
+      let result = await authService.checkPassword(
         originalPassword,
         hashedOriginalPassword
       );
@@ -35,7 +35,7 @@ describe("authProvider", () => {
 
       expect(result).toBe(expected);
 
-      result = await authProvider.checkPassword(
+      result = await authService.checkPassword(
         "wrongPassword",
         hashedOriginalPassword
       );
@@ -49,7 +49,7 @@ describe("authProvider", () => {
     it("generates token properly", () => {
       const userData = { id: 1, role: "admin" };
 
-      const result = authProvider.generateToken(userData);
+      const result = authService.generateToken(userData);
 
       expect(result).toBeDefined();
     });
@@ -59,8 +59,8 @@ describe("authProvider", () => {
     it("decodes token properly", () => {
       const userData = { id: 1, role: "admin" };
 
-      const accessToken = authProvider.generateToken(userData);
-      const decodedData = authProvider.decodeToken(accessToken);
+      const accessToken = authService.generateToken(userData);
+      const decodedData = authService.decodeToken(accessToken);
 
       expect(decodedData.id).toBe(userData.id);
       expect(decodedData.role).toBe(userData.role);
